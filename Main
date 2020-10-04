@@ -1,0 +1,177 @@
+#Made by Chan Chi Hei
+#Running this in pygame would be more faster
+import pygame
+import time
+import sys
+import random
+
+white = (255,255,255)
+black = (0,0,0)
+red = (255,0,0)
+green = (0,155,0)
+pygame.init()
+display_width = 800
+display_height = 600
+score = 0
+pygame.display.set_caption('Space')
+screen = pygame.display.set_mode((display_width,display_height))
+dir = 'up'
+clock = pygame.time.Clock()
+game = True
+wallwidth = 800
+wallheight = 55
+x = 70
+y = 216
+y_change = 0
+wallW = 800
+wallH = 55
+blockW = 60
+blockH = 60
+bx = 740
+by = 206
+wx = 0
+wy = 0
+wytrue = 150
+w2x = 0
+w2y = 360
+timer = 0
+sec = 0
+block_x = []
+block_y = []
+dis_y = []
+blockran = []
+anger = []
+frame = 0
+frame2 = 0
+wait = 0
+wait2 = 0
+score = 0
+safesec = 0
+lava = False
+show = False
+temp = 'null'
+numframe = ['0.png','1.png','2.png','3.png','4.png','5.png','6.png','7.png','8.png','9.png']
+wall = pygame.image.load("Newwall2.png")
+player = pygame.image.load("Rocket.png")
+background = pygame.image.load("Background.png")
+while game:
+    screen.blit(background, [0, 0])
+    screen.blit(wall, [wx, wy])
+    screen.blit(wall, [w2x, w2y])
+    screen.blit(player, [x, y])
+
+    if random.randint(0,49) == 0 and wait == 0:
+        #frame2 = random.randint(0,2)
+        block_x.append(800)
+        wait = 0
+        anger.append(0)
+        blockran.append(random.randint(0,2))
+        if random.randint(0,1) == 0:
+            block_y.append(206)
+            dis_y.append(206)
+        else:
+            block_y.append(250)
+            dis_y.append(300)
+        wait += 1
+            
+    if wait > 49:#Block spawn time
+        wait = 0
+    if not wait == 0:
+        wait += 1
+            
+    j = int(0)
+            
+    for i in range(len(block_x)):
+        block = pygame.image.load("block.png")
+        screen.blit(block, [block_x[j], dis_y[j]])
+        if blockran[j] == 0 and sec > 29 and wait2 == 0 and anger[j] == 0:
+            if random.randint(0,5) == 0:
+                blockran[j] = 3
+                wait2 = 1
+                anger[j] = 1
+        if wait2 > 19 and blockran[j] == 3:
+            wait2 = 0
+            blockran[j] = 0
+            if block_y[j] == 206:
+                block_y[j] = 250
+                dis_y[j] = 300
+            else:
+                block_y[j] = 206
+                dis_y[j] = 206
+                    
+        if not 7+score/10 > 19:
+            block_x[j] -= 7+score/10
+        else:
+            block_x[j] -= 20
+        if blockran[j] == 1:
+            blockW = 120
+        elif blockran[j] == 2:
+            blockW = 180
+        else:
+            blockW = 60
+        if x >= block_x[j] and x <= block_x[j] + blockW:
+            if y >= block_y[j] and y <= block_y[j] + blockH:
+                game = False
+
+        if block_x[j] < -179:
+            block_x.pop(j)
+            block_y.pop(j)
+            dis_y.pop(j)
+            blockran.pop(j)
+            anger.pop(j)
+            score += 1
+        else:
+            j += 1
+
+                    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                dir = 'up'
+            if event.key == pygame.K_DOWN:
+                dir = 'down'
+    if dir == 'up':
+        y_change = -5
+    if dir == 'down':
+        y_change = 5
+        
+    y += y_change
+    #first wall
+    if x >= wx and x <= wx + wallW:
+        if y >= wytrue and y <= wytrue + wallH:
+            y -= y_change
+    #second wall
+    if y > 300:
+        y -= y_change
+    temp = str(score)
+
+
+    #score
+    move = 0
+    o = len(temp)
+    for i in range(len(temp)):
+        text = pygame.image.load(numframe[int(temp[o-1])])
+        screen.blit(text, [500-move, 0])
+        move += 37
+        o -= 1
+
+    pygame.display.flip()
+
+    timer += 1
+    if timer > 99:
+        timer = 0
+        sec += 1
+
+
+time.sleep(1.5)
+quit()
+                
+intromain()
+#main()
+'''
+quit()
+time.sleep(3)
+pygame.quit()
+'''
